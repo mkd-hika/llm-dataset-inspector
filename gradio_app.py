@@ -233,18 +233,20 @@ def _columns_html(report: AuditReport) -> str:
 
 
 # ── Core audit function ───────────────────────────────────────────────────────
-def run_audit(link: str, row_limit: int, progress=gr.Progress()):
+def run_audit(link: str, row_start: int, row_end: int, progress=gr.Progress()):
     if not link.strip():
         raise gr.Error("Enter a dataset URL or local path.")
 
-    limit = int(row_limit) if row_limit else None
+    start = int(row_start) if row_start else 0
+    end   = int(row_end)   if row_end   else 0
+    limit = (end - start)  if end > start else None
 
     try:
         progress(0.10, desc="Detecting source…")
         info = detect_source(link.strip())
 
         progress(0.20, desc=f"Streaming dataset ({info.source_type})…")
-        splits = load_dataset(info, row_limit=limit)
+        splits = load_dataset(info, row_limit=limit, row_start=start)
 
         split_meta = {
             name: {
@@ -326,9 +328,8 @@ with gr.Blocks(
             placeholder="https://huggingface.co/datasets/… or local .jsonl/.csv/.parquet",
             scale=4,
         )
-        limit_box = gr.Number(
-            label="Row limit (0 = all)", value=5000, minimum=0, scale=1,
-        )
+        start_box = gr.Number(label="From row", value=0, minimum=0, precision=0, scale=1)
+        end_box   = gr.Number(label="To row (0 = all)", value=0, minimum=0, precision=0, scale=1)
         run_btn    = gr.Button("Inspect", variant="primary", scale=1)
         cancel_btn = gr.Button("Cancel",    variant="stop",    scale=1)
         clear_btn  = gr.Button("New Audit", scale=1)
@@ -358,20 +359,20 @@ with gr.Blocks(
 
     run_event = run_btn.click(
         fn=run_audit,
-        inputs=[link_box, limit_box],
+        inputs=[link_box, start_box, end_box],
         outputs=_outputs,
     )
     submit_event = link_box.submit(
         fn=run_audit,
-        inputs=[link_box, limit_box],
+        inputs=[link_box, start_box, end_box],
         outputs=_outputs,
     )
     cancel_btn.click(fn=None, cancels=[run_event, submit_event])
     clear_btn.click(
-        fn=lambda: ("", None, None, None, None, None, None, None),
+        fn=lambda: ("", 0, 0, None, None, None, None, None, None, None),
         inputs=[],
-        outputs=[link_box, summary_out, splits_out, issues_out,
-                 columns_out, html_file, json_file, card_file],
+        outputs=[link_box, start_box, end_box, summary_out, splits_out,
+                 issues_out, columns_out, html_file, json_file, card_file],
     )
 
 
