@@ -331,6 +331,7 @@ with gr.Blocks(
         )
         run_btn    = gr.Button("Run audit", variant="primary", scale=1)
         cancel_btn = gr.Button("Cancel",    variant="stop",    scale=1)
+        clear_btn  = gr.ClearButton(value="Clear", scale=1)
 
     with gr.Tabs():
         with gr.Tab("Summary"):
@@ -366,6 +367,8 @@ with gr.Blocks(
         outputs=_outputs,
     )
     cancel_btn.click(fn=None, cancels=[run_event, submit_event])
+    clear_btn.add([link_box, summary_out, splits_out, issues_out,
+                   columns_out, html_file, json_file, card_file])
 
 
 if __name__ == "__main__":
