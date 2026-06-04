@@ -1,6 +1,5 @@
 ---
 title: LLM Dataset QA Inspector
-emoji: 🔍
 colorFrom: blue
 colorTo: indigo
 sdk: gradio
