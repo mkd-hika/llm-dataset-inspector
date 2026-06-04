@@ -1,6 +1,5 @@
 ---
 title: LLM Dataset QA Inspector — MKD Co. Ltd.
-emoji: " "
 colorFrom: blue
 colorTo: indigo
 sdk: gradio
