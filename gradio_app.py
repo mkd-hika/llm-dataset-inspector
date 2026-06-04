@@ -329,7 +329,7 @@ with gr.Blocks(
         limit_box = gr.Number(
             label="Row limit (0 = all)", value=5000, minimum=0, scale=1,
         )
-        run_btn    = gr.Button("Run audit", variant="primary", scale=1)
+        run_btn    = gr.Button("Inspect", variant="primary", scale=1)
         cancel_btn = gr.Button("Cancel",    variant="stop",    scale=1)
         clear_btn  = gr.Button("New Audit", scale=1)
 
