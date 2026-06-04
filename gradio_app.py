@@ -312,7 +312,6 @@ with gr.Blocks(
     title="LLM Dataset QA Inspector",
     theme=gr.themes.Base(primary_hue="blue"),
     css=".contain{max-width:1100px} footer{display:none}",
-    js="() => { document.documentElement.lang = 'en'; }",
 ) as demo:
 
     gr.Markdown("# LLM Dataset QA Inspector")
@@ -332,7 +331,7 @@ with gr.Blocks(
         )
         run_btn    = gr.Button("Run audit", variant="primary", scale=1)
         cancel_btn = gr.Button("Cancel",    variant="stop",    scale=1)
-        clear_btn  = gr.Button("Clear", scale=1)
+        clear_btn  = gr.Button("New Audit", scale=1)
 
     with gr.Tabs():
         with gr.Tab("Summary"):
