@@ -1,0 +1,44 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Dataset QA Report</title>
+<style>
+ body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#f4f5f7;color:#1f2328}
+ .wrap{max-width:1000px;margin:0 auto;padding:28px}
+ h1{font-size:22px;margin:0 0 4px} h2{font-size:16px;margin:0 0 12px}
+ .muted{color:#6b7280;font-size:12px}
+ .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px;margin-bottom:18px}
+ .alert{border-left:5px solid #b00020}
+ .score-big{font-size:44px;font-weight:700}
+ table{width:100%;border-collapse:collapse;font-size:13px}
+ th,td{text-align:left;padding:7px 9px;border-bottom:1px solid #eee;vertical-align:top}
+ th{background:#fafafa;font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:#555}
+ pre{background:#0f172a;color:#e2e8f0;padding:8px;border-radius:6px;font-size:12px;overflow:auto;margin:6px 0 0}
+ .rating{padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600}
+ .r-excellent{background:#d1fae5;color:#065f46} .r-good{background:#dbeafe;color:#1e40af}
+ .r-needs{background:#fef3c7;color:#92400e} .r-critical{background:#fee2e2;color:#991b1b}
+ tr.s-fail td{background:#fff6f6} tr.s-warn td{background:#fffdf3}
+</style></head><body><div class="wrap">
+ <div class="card">
+   <h1>LLM Dataset QA Review</h1>
+   <div class="muted">/tmp/sample_alpaca.jsonl &middot; source: local &middot; generated 2026-06-04 01:49 UTC</div>
+ </div>
+ <div class='card alert'><h2>Critical and high-severity issues</h2><ul><li><b style='color:#b00020'>[CRITICAL]</b> SAFETY / PII presence (instruction) - 18 PII hits; most common: email (9 rows). Email/phone/SSN/IP/card patterns. <span class='muted'>(18 rows)</span></li><li><b style='color:#d35400'>[HIGH]</b> INTEGRITY / Exact duplicate rows - 291 exact duplicate rows (92.38%). <span class='muted'>(291 rows)</span></li><li><b style='color:#d35400'>[HIGH]</b> CONSISTENCY / Empty responses - 6 rows have an empty/near-empty output. <span class='muted'>(6 rows)</span></li></ul></div>
+ <div class="card">
+   <h2>LLM-Readiness Scorecard</h2>
+   <div class="score-big">66.9<span class="muted"> / 100 &middot; Needs Work</span></div>
+   <div class="muted">FAIL 3 &middot; WARN 6 &middot; PASS 6</div>
+   <table><tr><th>Dimension</th><th>Score</th><th>Weight</th><th>Rating</th></tr><tr><td>Completeness</td><td>62.5</td><td>20%</td><td><span class='rating r-needs'>Needs Work</span></td></tr><tr><td>Quality</td><td>52.0</td><td>25%</td><td><span class='rating r-needs'>Needs Work</span></td></tr><tr><td>Format</td><td>100.0</td><td>20%</td><td><span class='rating r-excellent'>Excellent</span></td></tr><tr><td>Safety</td><td>40.0</td><td>20%</td><td><span class='rating r-critical'>Critical</span></td></tr><tr><td>Diversity</td><td>89.5</td><td>15%</td><td><span class='rating r-good'>Good</span></td></tr></table>
+ </div>
+ <div class="card">
+   <h2>Splits</h2>
+   <table><tr><th>Split</th><th>Rows</th><th>Columns</th><th>Memory (MB)</th></tr><tr><td>data</td><td>315</td><td>3</td><td>0.03</td></tr></table>
+   <div class="muted" style="margin-top:6px">Format detected: alpaca</div>
+ </div>
+ <div class="card">
+   <h2>Test suite (15 checks on split 'data')</h2>
+   <table><tr><th>Category</th><th>Check</th><th>Status</th><th>Severity</th><th>Rows</th><th>Detail / fix</th></tr><tr class='s-fail'><td>SAFETY</td><td>PII presence (instruction)</td><td><b style='color:#b00020'>FAIL</b></td><td style='color:#b00020'>CRITICAL</td><td>18</td><td>18 PII hits; most common: email (9 rows). Email/phone/SSN/IP/card patterns.<div class='muted'>example rows: 0, 40, 80, 120, 160</div><pre># Redact with presidio or regex before training:
+from presidio_anonymizer import AnonymizerEngine  # recommended</pre></td></tr><tr class='s-fail'><td>CONSISTENCY</td><td>Empty responses</td><td><b style='color:#b00020'>FAIL</b></td><td style='color:#d35400'>HIGH</td><td>6</td><td>6 rows have an empty/near-empty output.<pre>df = df[df[&#x27;output&#x27;].astype(str).str.strip() != &#x27;&#x27;].reset_index(drop=True)</pre></td></tr><tr class='s-fail'><td>INTEGRITY</td><td>Exact duplicate rows</td><td><b style='color:#b00020'>FAIL</b></td><td style='color:#d35400'>HIGH</td><td>291</td><td>291 exact duplicate rows (92.38%).<pre>df = df.drop_duplicates().reset_index(drop=True)</pre></td></tr><tr class='s-warn'><td>COVERAGE</td><td>Class balance</td><td><b style='color:#b8860b'>WARN</b></td><td style='color:#b8860b'>MEDIUM</td><td>0</td><td>Severe imbalance in: instruction, output<pre># oversample minority / undersample majority / focal loss</pre></td></tr><tr class='s-warn'><td>INTEGRITY</td><td>Near-duplicate text (instruction)</td><td><b style='color:#b8860b'>WARN</b></td><td style='color:#b8860b'>MEDIUM</td><td>299</td><td>299 rows duplicate after whitespace/case normalisation (94.92%).<pre>key = df[&#x27;instruction&#x27;].str.lower().str.replace(r&#x27;\s+&#x27;,&#x27; &#x27;,regex=True).str.strip()
+df = df[~key.duplicated()].reset_index(drop=True)</pre></td></tr><tr class='s-warn'><td>QUALITY</td><td>HTML/XML bleed (instruction)</td><td><b style='color:#b8860b'>WARN</b></td><td style='color:#b8860b'>MEDIUM</td><td>11</td><td>11 rows contain HTML/XML tags.<div class='muted'>example rows: 0, 30, 60, 90, 120</div><pre>import re
+df[&#x27;instruction&#x27;] = df[&#x27;instruction&#x27;].str.replace(r&#x27;&lt;/?[^&gt;]+&gt;&#x27;,&#x27; &#x27;,regex=True)</pre></td></tr><tr class='s-warn'><td>QUALITY</td><td>Encoding artifacts (instruction)</td><td><b style='color:#b8860b'>WARN</b></td><td style='color:#b8860b'>MEDIUM</td><td>6</td><td>6 rows show mojibake / replacement chars.<div class='muted'>example rows: 0, 60, 120, 180, 240</div><pre>import ftfy; df[&#x27;instruction&#x27;] = df[&#x27;instruction&#x27;].map(ftfy.fix_text)</pre></td></tr><tr class='s-warn'><td>CONSISTENCY</td><td>Instruction/response length ratio</td><td><b style='color:#b8860b'>WARN</b></td><td style='color:#3a6ea5'>LOW</td><td>1</td><td>1 rows have a response &lt;10% the instruction length.<div class='muted'>example rows: 40</div><pre># Manually review: long instruction with a terse answer may be truncated.</pre></td></tr><tr class='s-warn'><td>COVERAGE</td><td>Lexical diversity (instruction)</td><td><b style='color:#b8860b'>WARN</b></td><td style='color:#3a6ea5'>LOW</td><td>0</td><td>Type-token ratio = 0.0199 over 1662 tokens. Very low TTR can signal templated/repetitive data.<pre># Inspect for templated boilerplate; diversify sources if needed.</pre></td></tr><tr class='s-pass'><td>FORMAT</td><td>Instruction format</td><td><b style='color:#1b7a3d'>PASS</b></td><td style='color:#777'>INFO</td><td>0</td><td>Detected format(s): alpaca</td></tr><tr class='s-pass'><td>QUALITY</td><td>Empty/whitespace text (instruction)</td><td><b style='color:#1b7a3d'>PASS</b></td><td style='color:#777'>INFO</td><td>0</td><td>0 rows are empty or whitespace-only.<pre>df = df[df[&#x27;instruction&#x27;].astype(str).str.strip() != &#x27;&#x27;].reset_index(drop=True)</pre></td></tr><tr class='s-pass'><td>QUALITY</td><td>Token budget (instruction)</td><td><b style='color:#1b7a3d'>PASS</b></td><td style='color:#777'>INFO</td><td>0</td><td>Max sample is 28 tokens (p99=27.3). Confirm this fits your context window.<pre>df = df[df[&#x27;instruction&#x27;].map(count_tokens) &lt;= MAX_TOKENS]</pre></td></tr><tr class='s-pass'><td>SAFETY</td><td>Toxicity surface flags (instruction)</td><td><b style='color:#1b7a3d'>PASS</b></td><td style='color:#777'>INFO</td><td>0</td><td>No keyword surface hits (does not prove the data is clean).<pre># Score with Detoxify or Perspective API; review before removing.</pre></td></tr><tr class='s-pass'><td>SCHEMA</td><td>Columns present</td><td><b style='color:#1b7a3d'>PASS</b></td><td style='color:#777'>INFO</td><td>0</td><td>3 columns detected: instruction, input, output</td></tr><tr class='s-pass'><td>SCHEMA</td><td>Dtype consistency</td><td><b style='color:#1b7a3d'>PASS</b></td><td style='color:#777'>INFO</td><td>0</td><td>No mixed-type object columns detected.<pre>df[&#x27;col&#x27;] = df[&#x27;col&#x27;].astype(str)  # or coerce to the intended single type</pre></td></tr></table>
+ </div>
+ <div class="muted">Toxicity checks are keyword surface flags for human/classifier review, not a measure of toxicity. PII checks are regex-based and may over- or under-match.</div>
+</div></body></html>
