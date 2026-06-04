@@ -1,3 +1,15 @@
+---
+title: LLM Dataset QA Inspector
+emoji: 🔍
+colorFrom: blue
+colorTo: indigo
+sdk: gradio
+sdk_version: "4.0"
+app_file: gradio_app.py
+pinned: false
+license: mit
+---
+
 # LLM Dataset QA Inspector
 
 An internal tool for auditing whether a dataset has been properly cleaned and
