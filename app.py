@@ -24,7 +24,7 @@ def _sev_color(sev: str) -> str:
             "LOW": "blue", "INFO": "gray"}.get(sev, "gray")
 
 
-st.set_page_config(page_title="LLM Dataset QA Inspector", layout="wide")
+st.set_page_config(page_title="LLM Dataset QA Inspector — MKD Co. Ltd.", layout="wide")
 
 # ── Session state ─────────────────────────────────────────────────────────────
 if "history" not in st.session_state:
@@ -118,7 +118,7 @@ def _run_audit(link: str, limit: int | None) -> tuple[AuditReport, pd.DataFrame]
 
 # ── Main area ─────────────────────────────────────────────────────────────────
 st.title("LLM Dataset QA Inspector")
-st.caption("Paste a dataset link to audit cleaning, formatting, safety, and LLM-readiness.")
+st.caption("MKD Co. Ltd. — Paste a dataset link to audit cleaning, formatting, safety, and LLM-readiness.")
 
 if run_btn and link:
     try:

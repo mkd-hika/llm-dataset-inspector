@@ -315,6 +315,7 @@ with gr.Blocks(
 ) as demo:
 
     gr.Markdown("# LLM Dataset QA Inspector")
+    gr.Markdown("**MKD Co. Ltd.**")
     gr.Markdown(
         "Paste a dataset link to audit cleaning, formatting, safety, and LLM-readiness."
     )
