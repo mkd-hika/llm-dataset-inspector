@@ -329,7 +329,8 @@ with gr.Blocks(
         limit_box = gr.Number(
             label="Row limit (0 = all)", value=5000, minimum=0, scale=1,
         )
-        run_btn = gr.Button("Run audit", variant="primary", scale=1)
+        run_btn    = gr.Button("Run audit", variant="primary", scale=1)
+        cancel_btn = gr.Button("Cancel",    variant="stop",    scale=1)
 
     with gr.Tabs():
         with gr.Tab("Summary"):
@@ -351,18 +352,20 @@ with gr.Blocks(
                 json_file = gr.File(label="JSON metadata",  file_count="single")
                 card_file = gr.File(label="data_card.md",   file_count="single")
 
-    run_btn.click(
+    _outputs = [summary_out, splits_out, issues_out, columns_out,
+                html_file, json_file, card_file]
+
+    run_event = run_btn.click(
         fn=run_audit,
         inputs=[link_box, limit_box],
-        outputs=[summary_out, splits_out, issues_out, columns_out,
-                 html_file, json_file, card_file],
+        outputs=_outputs,
     )
-    link_box.submit(
+    submit_event = link_box.submit(
         fn=run_audit,
         inputs=[link_box, limit_box],
-        outputs=[summary_out, splits_out, issues_out, columns_out,
-                 html_file, json_file, card_file],
+        outputs=_outputs,
     )
+    cancel_btn.click(fn=None, cancels=[run_event, submit_event])
 
 
 if __name__ == "__main__":
