@@ -312,6 +312,7 @@ with gr.Blocks(
     title="LLM Dataset QA Inspector",
     theme=gr.themes.Base(primary_hue="blue"),
     css=".contain{max-width:1100px} footer{display:none}",
+    js="() => { document.documentElement.lang = 'en'; }",
 ) as demo:
 
     gr.Markdown("# LLM Dataset QA Inspector")
