@@ -51,10 +51,10 @@ def _summary_html(report: AuditReport) -> str:
     rc = _RATING_COLOR.get(s["overall_rating"], "#777")
 
     cards = "".join(
-        f'<div style="background:#1e1e2e;border-radius:8px;padding:14px;text-align:center">'
-        f'<div style="font-size:0.78em;color:#888;margin-bottom:4px">{label}</div>'
-        f'<div style="font-size:1.05em;font-weight:700;color:#e0e0e0">{value}</div>'
-        f'</div>'
+        '<div style="background:#1e1e2e;border-radius:8px;padding:14px;text-align:center">'
+        '<div style="font-size:0.78em;color:#888;margin-bottom:4px">' + label + '</div>'
+        '<div style="font-size:1.05em;font-weight:700;color:#e0e0e0">' + str(value) + '</div>'
+        '</div>'
         for label, value in [
             ("Source", report.source.source_type),
             ("Format", fmt),
@@ -64,44 +64,46 @@ def _summary_html(report: AuditReport) -> str:
         ]
     )
 
-    return f"""
-<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px">
-  {cards}
-</div>
-<div style="display:grid;grid-template-columns:180px 1fr;gap:16px">
-  <div style="background:#1e1e2e;border-radius:8px;padding:20px;text-align:center">
-    <div style="font-size:3em;font-weight:800;color:{rc};line-height:1">{s['overall']}</div>
-    <div style="color:#666;font-size:0.8em">/ 100</div>
-    <div style="font-size:1.1em;font-weight:600;color:{rc};margin:8px 0">{s['overall_rating']}</div>
-    <div style="font-size:0.85em;line-height:2">
-      <span style="color:#c0392b">{cnt['fail']} FAIL</span>&nbsp;
-      <span style="color:#b8860b">{cnt['warn']} WARN</span>&nbsp;
-      <span style="color:#1b7a3d">{cnt['pass']} PASS</span>&nbsp;
-      <span style="color:#c0392b">{cnt['critical']} CRITICAL</span>
-    </div>
-  </div>
-  <div style="background:#1e1e2e;border-radius:8px;padding:16px">
-    <table style="width:100%;border-collapse:collapse;font-size:0.9em">
-      <thead><tr style="color:#888;font-size:0.8em;border-bottom:1px solid #333">
-        <th style="padding:6px;text-align:left">Dimension</th>
-        <th style="padding:6px;text-align:right">Score</th>
-        <th style="padding:6px;text-align:right">Weight</th>
-        <th style="padding:6px;text-align:left">Rating</th>
-      </tr></thead>
-      <tbody>
-        {"".join(
-          f'<tr style="border-bottom:1px solid #222">'
-          f'<td style="padding:7px 6px">{d}</td>'
-          f'<td style="padding:7px 6px;text-align:right;font-weight:700;color:{_RATING_COLOR.get(v[\"rating\"],\"#aaa\")}">{v["score"]}</td>'
-          f'<td style="padding:7px 6px;text-align:right;color:#888">{int(v["weight"]*100)}%</td>'
-          f'<td style="padding:7px 6px">{_badge(v["rating"], _RATING_COLOR.get(v["rating"],"#777"))}</td>'
-          f'</tr>'
-          for d, v in s["dimensions"].items()
-        )}
-      </tbody>
-    </table>
-  </div>
-</div>"""
+    dim_rows = []
+    for d, v in s["dimensions"].items():
+        dim_color = _RATING_COLOR.get(v["rating"], "#aaa")
+        dim_badge = _badge(v["rating"], _RATING_COLOR.get(v["rating"], "#777"))
+        dim_rows.append(
+            '<tr style="border-bottom:1px solid #222">'
+            '<td style="padding:7px 6px">' + d + '</td>'
+            '<td style="padding:7px 6px;text-align:right;font-weight:700;color:' + dim_color + '">' + str(v["score"]) + '</td>'
+            '<td style="padding:7px 6px;text-align:right;color:#888">' + str(int(v["weight"] * 100)) + '%</td>'
+            '<td style="padding:7px 6px">' + dim_badge + '</td>'
+            '</tr>'
+        )
+    dim_rows_html = "".join(dim_rows)
+
+    return (
+        '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px">'
+        + cards +
+        '</div>'
+        '<div style="display:grid;grid-template-columns:180px 1fr;gap:16px">'
+        '<div style="background:#1e1e2e;border-radius:8px;padding:20px;text-align:center">'
+        '<div style="font-size:3em;font-weight:800;color:' + rc + ';line-height:1">' + str(s["overall"]) + '</div>'
+        '<div style="color:#666;font-size:0.8em">/ 100</div>'
+        '<div style="font-size:1.1em;font-weight:600;color:' + rc + ';margin:8px 0">' + s["overall_rating"] + '</div>'
+        '<div style="font-size:0.85em;line-height:2">'
+        '<span style="color:#c0392b">' + str(cnt["fail"]) + ' FAIL</span>&nbsp;'
+        '<span style="color:#b8860b">' + str(cnt["warn"]) + ' WARN</span>&nbsp;'
+        '<span style="color:#1b7a3d">' + str(cnt["pass"]) + ' PASS</span>&nbsp;'
+        '<span style="color:#c0392b">' + str(cnt["critical"]) + ' CRITICAL</span>'
+        '</div></div>'
+        '<div style="background:#1e1e2e;border-radius:8px;padding:16px">'
+        '<table style="width:100%;border-collapse:collapse;font-size:0.9em">'
+        '<thead><tr style="color:#888;font-size:0.8em;border-bottom:1px solid #333">'
+        '<th style="padding:6px;text-align:left">Dimension</th>'
+        '<th style="padding:6px;text-align:right">Score</th>'
+        '<th style="padding:6px;text-align:right">Weight</th>'
+        '<th style="padding:6px;text-align:left">Rating</th>'
+        '</tr></thead>'
+        '<tbody>' + dim_rows_html + '</tbody>'
+        '</table></div></div>'
+    )
 
 
 def _issues_html(report: AuditReport, primary_df: pd.DataFrame | None) -> str:
