@@ -332,7 +332,7 @@ with gr.Blocks(
         end_box   = gr.Number(label="To row (0 = all)", value=0, minimum=0, precision=0, scale=1)
         run_btn    = gr.Button("Inspect", variant="primary", scale=1)
         cancel_btn = gr.Button("Cancel",    variant="stop",    scale=1)
-        clear_btn  = gr.Button("New Audit", scale=1)
+        clear_btn  = gr.Button("New Inspection", scale=1)
 
     with gr.Tabs():
         with gr.Tab("Summary"):
