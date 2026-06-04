@@ -319,7 +319,7 @@ with gr.Blocks(
     gr.Markdown("# LLM Dataset QA Inspector")
     gr.Markdown("**MKD Co. Ltd.**")
     gr.Markdown(
-        "Paste a dataset link to audit cleaning, formatting, safety, and LLM-readiness."
+        "Paste a dataset link to inspect cleaning, formatting, safety, and LLM-readiness."
     )
 
     with gr.Row():
