@@ -17,6 +17,8 @@ prepared for LLM training. Paste a dataset link (or local path); the tool
 downloads it, runs a deterministic inspection pipeline, and produces a strict
 QA scorecard with row-level evidence and remediation snippets.
 
+[![Local audit example](https://github.com/mkd-hika/llm-dataset-inspector/actions/workflows/example.yml/badge.svg)](https://github.com/mkd-hika/llm-dataset-inspector/actions/workflows/example.yml)
+
 ## Demo and sample report
 
 [Open the public Hugging Face demo](https://huggingface.co/spaces/mkd-hika/llm-dataset-inspector) · [Reproduce the local audit](examples/README.md) · [Read the generated data card](examples/data_card.md)
