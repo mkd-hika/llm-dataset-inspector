@@ -17,6 +17,17 @@ prepared for LLM training. Paste a dataset link (or local path); the tool
 downloads it, runs a deterministic inspection pipeline, and produces a strict
 QA scorecard with row-level evidence and remediation snippets.
 
+## Demo and sample report
+
+[Open the public Hugging Face demo](https://huggingface.co/spaces/mkd-hika/llm-dataset-inspector) · [Reproduce the local audit](examples/README.md) · [Read the generated data card](examples/data_card.md)
+
+The hosted Space may need to wake up before use.
+
+![Audit counts from the synthetic example](docs/images/example-audit.png)
+
+This preview shows actual checks on the six-row synthetic fixture. It is an example report, not a screenshot or a dataset-quality guarantee.
+
+
 ## What it checks
 
 - **Source and structure**: source type, format, splits, rows/columns, memory,

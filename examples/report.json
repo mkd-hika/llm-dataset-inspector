@@ -1,0 +1,229 @@
+{
+  "generated_at": "2026-10-13T03:24:54.296904+00:00",
+  "link": "examples/sample.jsonl",
+  "source": {
+    "type": "local",
+    "format": "jsonl",
+    "resolved_url": "examples/sample.jsonl"
+  },
+  "splits": {
+    "data": {
+      "rows": 6,
+      "cols": 3,
+      "memory_mb": 0.0
+    }
+  },
+  "primary_split": "data",
+  "scorecard": {
+    "overall": 85.0,
+    "overall_rating": "Good",
+    "dimensions": {
+      "Completeness": {
+        "score": 62.5,
+        "weight": 0.2,
+        "rating": "Needs Work"
+      },
+      "Quality": {
+        "score": 70.0,
+        "weight": 0.25,
+        "rating": "Needs Work"
+      },
+      "Format": {
+        "score": 100.0,
+        "weight": 0.2,
+        "rating": "Excellent"
+      },
+      "Safety": {
+        "score": 100.0,
+        "weight": 0.2,
+        "rating": "Excellent"
+      },
+      "Diversity": {
+        "score": 100.0,
+        "weight": 0.15,
+        "rating": "Excellent"
+      }
+    },
+    "counts": {
+      "fail": 2,
+      "warn": 1,
+      "pass": 12,
+      "critical": 0,
+      "high": 2
+    }
+  },
+  "format_detected": [
+    "alpaca"
+  ],
+  "tests": [
+    {
+      "category": "SCHEMA",
+      "name": "Columns present",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "3 columns detected: instruction, input, output",
+      "example_rows": [],
+      "fix": "",
+      "effort": "small"
+    },
+    {
+      "category": "SCHEMA",
+      "name": "Dtype consistency",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "No mixed-type object columns detected.",
+      "example_rows": [],
+      "fix": "df['col'] = df['col'].astype(str)  # or coerce to the intended single type",
+      "effort": "small"
+    },
+    {
+      "category": "INTEGRITY",
+      "name": "Exact duplicate rows",
+      "status": "FAIL",
+      "affected_rows": 1,
+      "severity": "HIGH",
+      "detail": "1 exact duplicate rows (16.67%).",
+      "example_rows": [],
+      "fix": "df = df.drop_duplicates().reset_index(drop=True)",
+      "effort": "trivial"
+    },
+    {
+      "category": "INTEGRITY",
+      "name": "Near-duplicate text (instruction)",
+      "status": "WARN",
+      "affected_rows": 1,
+      "severity": "MEDIUM",
+      "detail": "1 rows duplicate after whitespace/case normalisation (16.67%).",
+      "example_rows": [],
+      "fix": "key = df['instruction'].str.lower().str.replace(r'\\s+',' ',regex=True).str.strip()\ndf = df[~key.duplicated()].reset_index(drop=True)",
+      "effort": "small"
+    },
+    {
+      "category": "QUALITY",
+      "name": "Empty/whitespace text (instruction)",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "0 rows are empty or whitespace-only.",
+      "example_rows": [],
+      "fix": "df = df[df['instruction'].astype(str).str.strip() != ''].reset_index(drop=True)",
+      "effort": "trivial"
+    },
+    {
+      "category": "QUALITY",
+      "name": "HTML/XML bleed (instruction)",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "0 rows contain HTML/XML tags.",
+      "example_rows": [],
+      "fix": "import re\ndf['instruction'] = df['instruction'].str.replace(r'</?[^>]+>',' ',regex=True)",
+      "effort": "small"
+    },
+    {
+      "category": "QUALITY",
+      "name": "Encoding artifacts (instruction)",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "0 rows show mojibake / replacement chars.",
+      "example_rows": [],
+      "fix": "import ftfy; df['instruction'] = df['instruction'].map(ftfy.fix_text)",
+      "effort": "small"
+    },
+    {
+      "category": "QUALITY",
+      "name": "Token budget (instruction)",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "Max sample is 9 tokens (p99=8.9). Confirm this fits your context window.",
+      "example_rows": [],
+      "fix": "df = df[df['instruction'].map(count_tokens) <= MAX_TOKENS]",
+      "effort": "small"
+    },
+    {
+      "category": "FORMAT",
+      "name": "Instruction format",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "Detected format(s): alpaca",
+      "example_rows": [],
+      "fix": "",
+      "effort": "medium"
+    },
+    {
+      "category": "SAFETY",
+      "name": "PII presence (instruction)",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "No PII patterns matched.",
+      "example_rows": [],
+      "fix": "# Redact with presidio or regex before training:\nfrom presidio_anonymizer import AnonymizerEngine  # recommended",
+      "effort": "medium"
+    },
+    {
+      "category": "SAFETY",
+      "name": "Toxicity surface flags (instruction)",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "No keyword surface hits (does not prove the data is clean).",
+      "example_rows": [],
+      "fix": "# Score with Detoxify or Perspective API; review before removing.",
+      "effort": "medium"
+    },
+    {
+      "category": "CONSISTENCY",
+      "name": "Empty responses",
+      "status": "FAIL",
+      "affected_rows": 1,
+      "severity": "HIGH",
+      "detail": "1 rows have an empty/near-empty output.",
+      "example_rows": [],
+      "fix": "df = df[df['output'].astype(str).str.strip() != ''].reset_index(drop=True)",
+      "effort": "trivial"
+    },
+    {
+      "category": "CONSISTENCY",
+      "name": "Instruction/response length ratio",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "0 rows have a response <10% the instruction length.",
+      "example_rows": [],
+      "fix": "# Manually review: long instruction with a terse answer may be truncated.",
+      "effort": "medium"
+    },
+    {
+      "category": "COVERAGE",
+      "name": "Lexical diversity (instruction)",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "Type-token ratio = 0.7222 over 18 tokens. Very low TTR can signal templated/repetitive data.",
+      "example_rows": [],
+      "fix": "# Inspect for templated boilerplate; diversify sources if needed.",
+      "effort": "large"
+    },
+    {
+      "category": "COVERAGE",
+      "name": "Class balance",
+      "status": "PASS",
+      "affected_rows": 0,
+      "severity": "INFO",
+      "detail": "No severe class imbalance detected.",
+      "example_rows": [],
+      "fix": "# none",
+      "effort": "medium"
+    }
+  ],
+  "leakage": {
+    "checked": false,
+    "reason": "Need >=2 splits and a text column."
+  }
+}

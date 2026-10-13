@@ -1,0 +1,6 @@
+{"instruction":"Explain dataset splitting.","input":"","output":"Keep training and evaluation examples in separate splits to reduce leakage."}
+{"instruction":"Explain dataset splitting.","input":"","output":"Keep training and evaluation examples in separate splits to reduce leakage."}
+{"instruction":"Explain deduplication.","input":"","output":"Deduplication removes repeated examples from a dataset."}
+{"instruction":"Summarize the reference.","input":"","output":"<p>This synthetic record intentionally contains HTML markup.</p>"}
+{"instruction":"Explain evaluation.","input":"","output":""}
+{"instruction":"Describe a synthetic contact field.","input":"","output":"Contact demo@example.com. This reserved example address tests the approximate PII detector."}
